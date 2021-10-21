@@ -7,6 +7,15 @@ const pizzaController = {
     // get all pizzas
     getAllPizza(req, res) {
         Pizza.find({})
+            // populates comments
+            .populate({
+                path: 'comments',
+                // The minus sign - in front of the field indicates that we don't want it to be returned. 
+                select: '-__v'
+            })
+            .select('-__v')
+            // newest pizza returns first
+            .sort({ _id: -1 })
             .then(dbPizzaData => res.json(dbPizzaData))
             .catch(err => {
                 console.dir.log(err);
@@ -17,6 +26,12 @@ const pizzaController = {
     // get one pizza by id
     getPizzaById({ params }, res) {
         Pizza.findOne({ _id: params.id })
+        .populate({
+            path: 'comments',
+            // The minus sign - in front of the field indicates that we don't want it to be returned. 
+            select: '-__v'
+        })
+        .select('-__v')
         .then(dbPizzaData => {
             // if no pizza is found, send 404
             if (!dbPizzaData) {
@@ -40,6 +55,7 @@ const pizzaController = {
 
     // update pizza by id
     updatePizza({ params, body }, res) {
+        //With Mongoose, the "where" clause is used first, then the updated data, then options for how the data should be returned.
         Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true })
             .then(dbPizzaData => {
                 if (!dbPizzaData) {
