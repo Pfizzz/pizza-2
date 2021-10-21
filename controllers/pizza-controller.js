@@ -55,8 +55,8 @@ const pizzaController = {
 
     // update pizza by id
     updatePizza({ params, body }, res) {
-        //With Mongoose, the "where" clause is used first, then the updated data, then options for how the data should be returned.
-        Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true })
+        //With Mongoose, the "where" clause is used first, then the updated data, then options for how the data should be returned. Now with validation at the end
+        Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
             .then(dbPizzaData => {
                 if (!dbPizzaData) {
                     res.status(404).json({ message: 'No pizza found with this id!' });
