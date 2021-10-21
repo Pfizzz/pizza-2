@@ -67,6 +67,8 @@ const handlePizzaSubmit = event => {
   })
   .catch(err => {
     console.log(err);
+    // sends data to saveRecord in idb.js
+    saveRecord(formData);
   });
 };
 
